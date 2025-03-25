@@ -1,0 +1,492 @@
+/* 订单管理页面样式 */
+
+/* 订单操作区域 */
+.order-actions {
+    margin-bottom: 20px;
+}
+
+.order-actions button {
+    padding: 10px 15px;
+    font-size: 16px;
+}
+
+/* 订单列表 */
+.order-list {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.order-list h2 {
+    margin-bottom: 20px;
+    color: #24292e;
+    border-bottom: 1px solid #e1e4e8;
+    padding-bottom: 10px;
+}
+
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.order-count {
+    font-size: 14px;
+    color: #586069;
+}
+
+.filters {
+    display: flex;
+    gap: 10px;
+}
+
+.filters select {
+    padding: 8px 12px;
+    border: 1px solid #e1e4e8;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.filters button {
+    padding: 8px 12px;
+    background-color: #f6f8fa;
+    border: 1px solid #e1e4e8;
+    border-radius: 4px;
+    color: #24292e;
+}
+
+.filters button:hover {
+    background-color: #e1e4e8;
+}
+
+.table-container {
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+/* 表格样式 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th,
+table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e1e4e8;
+}
+
+table th {
+    background-color: #f6f8fa;
+    font-weight: 600;
+}
+
+tbody tr:hover {
+    background-color: #f6f8fa;
+}
+
+.empty-message {
+    text-align: center;
+    color: #586069;
+    padding: 20px 0;
+}
+
+/* 订单状态样式 */
+.status {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-pending {
+    background-color: #ffeaa7;
+    color: #b7791f;
+}
+
+.status-processing {
+    background-color: #bee3f8;
+    color: #2b6cb0;
+}
+
+.status-shipped {
+    background-color: #c6f6d5;
+    color: #2f855a;
+}
+
+.status-delivered {
+    background-color: #9ae6b4;
+    color: #276749;
+}
+
+.status-cancelled {
+    background-color: #fed7d7;
+    color: #c53030;
+}
+
+/* 操作按钮 */
+.action-btn {
+    padding: 6px 10px;
+    margin-right: 5px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    border: none;
+}
+
+.view-btn {
+    background-color: #0366d6;
+    color: white;
+}
+
+.view-btn:hover {
+    background-color: #0256b9;
+}
+
+/* 分页 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination-btn {
+    padding: 8px 12px;
+    margin: 0 5px;
+    background-color: #f6f8fa;
+    border: 1px solid #e1e4e8;
+    border-radius: 4px;
+    color: #24292e;
+    cursor: pointer;
+}
+
+.pagination-btn:hover:not(.active) {
+    background-color: #e1e4e8;
+}
+
+.pagination-btn.active {
+    background-color: #0366d6;
+    color: white;
+    border-color: #0366d6;
+}
+
+.pagination-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* 弹窗样式 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 50px auto;
+    padding: 0;
+    width: 80%;
+    max-width: 800px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    animation: modalFadeIn 0.3s;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e1e4e8;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #24292e;
+}
+
+.close {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #000;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+/* 订单详情样式 */
+.order-info {
+    margin-bottom: 30px;
+}
+
+.order-info h4,
+.order-items h4,
+.admin-actions h4 {
+    margin: 0 0 15px 0;
+    color: #24292e;
+    border-bottom: 1px solid #e1e4e8;
+    padding-bottom: 10px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.label {
+    font-weight: 600;
+    color: #586069;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.order-items {
+    margin-bottom: 30px;
+}
+
+.order-items table {
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.admin-actions {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e1e4e8;
+}
+
+.status-update {
+    display: flex;
+    gap: 10px;
+}
+
+.status-update select {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #e1e4e8;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.status-update button {
+    padding: 10px 15px;
+    background-color: #2ea44f;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.status-update button:hover {
+    background-color: #2c974b;
+}
+
+/* 新建订单弹窗样式 */
+.order-items-list {
+    margin-bottom: 20px;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f6f8fa;
+    border-radius: 4px;
+}
+
+.item-info {
+    flex: 1;
+}
+
+.item-name {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.item-details {
+    display: flex;
+    color: #586069;
+    font-size: 14px;
+}
+
+.item-price, .item-quantity {
+    margin-right: 15px;
+}
+
+.item-total {
+    font-weight: 600;
+}
+
+.remove-item {
+    cursor: pointer;
+    color: #cb2431;
+    margin-left: 15px;
+}
+
+.add-item {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f6f8fa;
+    border-radius: 8px;
+}
+
+.add-item h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #24292e;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.form-group select,
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e1e4e8;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.form-group button {
+    padding: 10px 15px;
+    background-color: #0366d6;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.form-group button:hover {
+    background-color: #0256b9;
+}
+
+.order-summary {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f6f8fa;
+    border-radius: 8px;
+}
+
+.total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.form-buttons button {
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+}
+
+#saveOrderBtn {
+    background-color: #2ea44f;
+    color: white;
+}
+
+#saveOrderBtn:hover {
+    background-color: #2c974b;
+}
+
+#cancelOrderBtn {
+    background-color: #e1e4e8;
+    color: #24292e;
+}
+
+#cancelOrderBtn:hover {
+    background-color: #d1d5da;
+}
+
+/* 响应式布局 */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        margin: 20px auto;
+    }
+    
+    .list-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .filters {
+        width: 100%;
+    }
+    
+    .filters select {
+        flex-grow: 1;
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+} 

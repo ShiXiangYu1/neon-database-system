@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+  <!-- 数据库图标 -->
+  <ellipse cx="24" cy="12" rx="16" ry="8" fill="#4A90E2" opacity="0.8"/>
+  <path d="M40 12v24c0 4.418-7.163 8-16 8s-16-3.582-16-8V12" stroke="#2C3E50" stroke-width="2"/>
+  <path d="M40 24c0 4.418-7.163 8-16 8s-16-3.582-16-8" stroke="#2C3E50" stroke-width="2"/>
+  <path d="M40 18c0 4.418-7.163 8-16 8s-16-3.582-16-8" stroke="#2C3E50" stroke-width="2"/>
+  <path d="M40 30c0 4.418-7.163 8-16 8s-16-3.582-16-8" stroke="#2C3E50" stroke-width="2"/>
+  
+  <!-- Neon效果 -->
+  <ellipse cx="24" cy="12" rx="16" ry="8" fill="#5E97F6" opacity="0.4"/>
+  <ellipse cx="24" cy="12" rx="12" ry="6" fill="#82B1FF" opacity="0.6"/>
+  <ellipse cx="24" cy="12" rx="8" ry="4" fill="#BBDEFB" opacity="0.8"/>
+</svg> 

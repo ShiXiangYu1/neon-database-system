@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据报表 - Neon数据库系统</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- 引入Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 引入日期选择器 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- 侧边栏 -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="images/logo.svg" alt="Logo">
+                <h2>Neon</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html"><i class="bi bi-house"></i> 首页</a></li>
+                <li><a href="users.html"><i class="bi bi-people"></i> 用户管理</a></li>
+                <li><a href="products.html"><i class="bi bi-box"></i> 产品管理</a></li>
+                <li><a href="orders.html"><i class="bi bi-cart"></i> 订单管理</a></li>
+                <li class="active"><a href="reports.html"><i class="bi bi-bar-chart"></i> 数据报表</a></li>
+                <li><a href="files.html"><i class="bi bi-file-earmark"></i> 文件管理</a></li>
+            </ul>
+            <div class="logout">
+                <a href="#" id="logoutBtn"><i class="bi bi-box-arrow-left"></i> 退出登录</a>
+            </div>
+        </div>
+        
+        <!-- 主要内容 -->
+        <main class="main-content">
+            <div class="header">
+                <h1>数据报表</h1>
+                <div class="user-info">
+                    <span id="currentUser">用户名</span>
+                    <i class="bi bi-person-circle"></i>
+                </div>
+            </div>
+            
+            <!-- 报表类型选择器 -->
+            <div class="report-selector">
+                <div class="tabs-container">
+                    <div class="tabs">
+                        <button class="tab-btn active" data-report="sales-overview">销售总览</button>
+                        <button class="tab-btn" data-report="sales-trend">销售趋势</button>
+                        <button class="tab-btn" data-report="top-products">畅销产品</button>
+                        <button class="tab-btn" data-report="category-sales">类别分析</button>
+                        <button class="tab-btn" data-report="period-comparison">时间对比</button>
+                        <button class="tab-btn" data-report="order-status">订单状态</button>
+                        <button class="tab-btn" data-report="user-growth">用户增长</button>
+                        <button class="tab-btn" data-report="user-consumption">用户消费</button>
+                        <button class="tab-btn" data-report="inventory-status">库存状态</button>
+                        <button class="tab-btn" data-report="returns-analysis">退货分析</button>
+                        <button class="tab-btn" data-report="inventory-turnover">库存周转</button>
+                        <button class="tab-btn" data-report="customer-retention">客户留存</button>
+                        <button class="tab-btn" data-report="sales-funnel">销售漏斗</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 报表过滤器 -->
+            <div class="report-filters">
+                <div id="filter-sales-trend" class="filter-group" style="display: none;">
+                    <label>时间范围：</label>
+                    <select id="sales-trend-days">
+                        <option value="7">最近7天</option>
+                        <option value="30" selected>最近30天</option>
+                        <option value="90">最近90天</option>
+                        <option value="365">最近一年</option>
+                    </select>
+                </div>
+
+                <div id="filter-category-sales" class="filter-group" style="display: none;">
+                    <label>时间范围：</label>
+                    <select id="category-sales-period">
+                        <option value="7days">最近7天</option>
+                        <option value="30days" selected>最近30天</option>
+                        <option value="90days">最近90天</option>
+                        <option value="365days">最近一年</option>
+                        <option value="all">全部时间</option>
+                    </select>
+                </div>
+
+                <div id="filter-period-comparison" class="filter-group" style="display: none;">
+                    <label>对比类型：</label>
+                    <select id="period-comparison-type">
+                        <option value="month" selected>月度环比</option>
+                        <option value="quarter">季度环比</option>
+                        <option value="year">年度同比</option>
+                    </select>
+                </div>
+
+                <div id="filter-order-status" class="filter-group" style="display: none;">
+                    <label>时间范围：</label>
+                    <select id="order-status-period">
+                        <option value="7days">最近7天</option>
+                        <option value="30days" selected>最近30天</option>
+                        <option value="90days">最近90天</option>
+                        <option value="all">全部时间</option>
+                    </select>
+                </div>
+
+                <div id="filter-user-growth" class="filter-group" style="display: none;">
+                    <label>月数：</label>
+                    <select id="user-growth-months">
+                        <option value="6">最近6个月</option>
+                        <option value="12" selected>最近12个月</option>
+                        <option value="24">最近24个月</option>
+                    </select>
+                </div>
+
+                <div id="filter-top-products" class="filter-group" style="display: none;">
+                    <label>显示数量：</label>
+                    <select id="top-products-limit">
+                        <option value="5" selected>5个</option>
+                        <option value="10">10个</option>
+                        <option value="15">15个</option>
+                    </select>
+                </div>
+                
+                <div id="filter-returns-analysis" class="filter-group" style="display: none;">
+                    <label>时间范围：</label>
+                    <select id="returns-analysis-period">
+                        <option value="7days">最近7天</option>
+                        <option value="30days" selected>最近30天</option>
+                        <option value="90days">最近90天</option>
+                        <option value="365days">最近一年</option>
+                        <option value="all">全部时间</option>
+                    </select>
+                </div>
+                
+                <div id="filter-inventory-turnover" class="filter-group" style="display: none;">
+                    <label>计算周期：</label>
+                    <select id="inventory-turnover-period">
+                        <option value="month">月度</option>
+                        <option value="quarter" selected>季度</option>
+                        <option value="year">年度</option>
+                    </select>
+                </div>
+                
+                <div id="filter-customer-retention" class="filter-group" style="display: none;">
+                    <label>分析周期：</label>
+                    <select id="customer-retention-period">
+                        <option value="month">月度</option>
+                        <option value="quarter" selected>季度</option>
+                        <option value="year">年度</option>
+                    </select>
+                    <label style="margin-left: 15px;">用户组：</label>
+                    <select id="customer-retention-type">
+                        <option value="all" selected>所有用户</option>
+                        <option value="new">新用户</option>
+                        <option value="active">活跃用户</option>
+                    </select>
+                </div>
+                
+                <div id="filter-sales-funnel" class="filter-group" style="display: none;">
+                    <label>时间范围：</label>
+                    <select id="sales-funnel-period">
+                        <option value="7days">最近7天</option>
+                        <option value="30days" selected>最近30天</option>
+                        <option value="90days">最近90天</option>
+                        <option value="all">全部时间</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- 报表内容 -->
+            <div class="report-container">
+                <!-- 销售总览 -->
+                <div id="sales-overview-report" class="report-content">
+                    <div class="card-container">
+                        <div class="card">
+                            <div class="card-title">总销售额</div>
+                            <div class="card-value" id="total-sales">¥0</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">今日销售额</div>
+                            <div class="card-value" id="today-sales">¥0</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">昨日销售额</div>
+                            <div class="card-value" id="yesterday-sales">¥0</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">近7天销售额</div>
+                            <div class="card-value" id="week-sales">¥0</div>
+                        </div>
+                    </div>
+                    <div class="card-container">
+                        <div class="card">
+                            <div class="card-title">总订单数</div>
+                            <div class="card-value" id="total-orders">0</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">今日订单数</div>
+                            <div class="card-value" id="today-orders">0</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">待处理订单</div>
+                            <div class="card-value" id="pending-orders">0</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">近30天订单数</div>
+                            <div class="card-value" id="month-orders">0</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 销售趋势 -->
+                <div id="sales-trend-report" class="report-content" style="display: none;">
+                    <div class="chart-container">
+                        <canvas id="sales-trend-chart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- 畅销产品 -->
+                <div id="top-products-report" class="report-content" style="display: none;">
+                    <div class="chart-container">
+                        <canvas id="top-products-chart"></canvas>
+                    </div>
+                    <div class="table-container">
+                        <table id="top-products-table" class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>排名</th>
+                                    <th>产品名称</th>
+                                    <th>价格</th>
+                                    <th>销量</th>
+                                    <th>销售额</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- 数据将动态加载 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- 类别销售分析 -->
+                <div id="category-sales-report" class="report-content" style="display: none;">
+                    <div class="chart-container split">
+                        <div class="chart-half">
+                            <canvas id="category-sales-pie-chart"></canvas>
+                        </div>
+                        <div class="chart-half">
+                            <canvas id="category-sales-bar-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table id="category-sales-table" class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>类别</th>
+                                    <th>销售数量</th>
+                                    <th>销售额</th>
+                                    <th>订单数</th>
+                                    <th>占比</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- 数据将动态加载 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- 时间段对比 -->
+                <div id="period-comparison-report" class="report-content" style="display: none;">
+                    <div class="period-comparison-container">
+                        <div class="period-header">
+                            <div id="current-period-label" class="period-label">当前</div>
+                            <div id="previous-period-label" class="period-label">前期</div>
+                        </div>
+                        <div class="period-metrics">
+                            <div class="period-metric">
+                                <div class="metric-name">销售额</div>
+                                <div class="metric-values">
+                                    <div id="current-period-sales" class="current-value">¥0</div>
+                                    <div id="previous-period-sales" class="previous-value">¥0</div>
+                                    <div id="sales-growth" class="growth-rate">0%</div>
+                                </div>
+                            </div>
+                            <div class="period-metric">
+                                <div class="metric-name">订单数</div>
+                                <div class="metric-values">
+                                    <div id="current-period-orders" class="current-value">0</div>
+                                    <div id="previous-period-orders" class="previous-value">0</div>
+                                    <div id="orders-growth" class="growth-rate">0%</div>
+                                </div>
+                            </div>
+                            <div class="period-metric">
+                                <div class="metric-name">平均订单价值</div>
+                                <div class="metric-values">
+                                    <div id="current-period-aov" class="current-value">¥0</div>
+                                    <div id="previous-period-aov" class="previous-value">¥0</div>
+                                    <div id="aov-growth" class="growth-rate">0%</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="period-charts">
+                            <div class="chart-container">
+                                <h3>两个时期销售对比</h3>
+                                <canvas id="period-comparison-chart"></canvas>
+                            </div>
+                        </div>
+                        <div class="period-top-products">
+                            <div class="period-column">
+                                <h3>当期畅销产品</h3>
+                                <ul id="current-period-top-products" class="top-products-list">
+                                    <!-- 数据将动态加载 -->
+                                </ul>
+                            </div>
+                            <div class="period-column">
+                                <h3>前期畅销产品</h3>
+                                <ul id="previous-period-top-products" class="top-products-list">
+                                    <!-- 数据将动态加载 -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 订单状态分布 -->
+                <div id="order-status-report" class="report-content" style="display: none;">
+                    <div class="chart-container split">
+                        <div class="chart-half">
+                            <canvas id="order-status-pie-chart"></canvas>
+                        </div>
+                        <div class="chart-half">
+                            <canvas id="order-status-bar-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table id="order-status-table" class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>订单状态</th>
+                                    <th>订单数量</th>
+                                    <th>金额</th>
+                                    <th>占比</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- 数据将动态加载 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- 用户增长趋势 -->
+                <div id="user-growth-report" class="report-content" style="display: none;">
+                    <div class="chart-container">
+                        <canvas id="user-growth-chart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- 用户消费分析 -->
+                <div id="user-consumption-report" class="report-content" style="display: none;">
+                    <div class="chart-container split">
+                        <div class="chart-half">
+                            <h3>用户消费分布</h3>
+                            <canvas id="user-consumption-chart"></canvas>
+                        </div>
+                        <div class="chart-half">
+                            <div class="user-metrics">
+                                <div class="user-metric">
+                                    <div class="metric-name">平均订单价值</div>
+                                    <div id="avg-order-value" class="metric-value">¥0</div>
+                                </div>
+                                <div class="user-metric">
+                                    <div class="metric-name">复购率</div>
+                                    <div id="repeat-purchase-rate" class="metric-value">0%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="top-spenders-container">
+                        <h3>高价值用户 (Top 10)</h3>
+                        <div class="table-container">
+                            <table id="top-spenders-table" class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>用户ID</th>
+                                        <th>用户名</th>
+                                        <th>邮箱</th>
+                                        <th>订单数</th>
+                                        <th>总消费金额</th>
+                                        <th>最近订单</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- 数据将动态加载 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 库存状态 -->
+                <div id="inventory-status-report" class="report-content" style="display: none;">
+                    <div class="card-container">
+                        <div class="card">
+                            <div class="card-title">产品总数</div>
+                            <div class="card-value" id="total-products">0</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">低库存产品</div>
+                            <div class="card-value" id="low-stock-count">0</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">缺货产品</div>
+                            <div class="card-value" id="out-of-stock-count">0</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">库存过多</div>
+                            <div class="card-value" id="overstocked-count">0</div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container split">
+                        <div class="chart-half">
+                            <h3>库存状态分布</h3>
+                            <canvas id="inventory-status-chart"></canvas>
+                        </div>
+                        <div class="chart-half">
+                            <h3>各类别库存价值</h3>
+                            <canvas id="inventory-value-chart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="low-stock-container">
+                        <h3>库存预警产品列表</h3>
+                        <div class="table-container">
+                            <table id="low-stock-table" class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>产品ID</th>
+                                        <th>产品名称</th>
+                                        <th>产品类别</th>
+                                        <th>当前库存</th>
+                                        <th>库存下限</th>
+                                        <th>单价</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- 数据将动态加载 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 退货分析 -->
+                <div id="returns-analysis-report" class="report-content" style="display: none;">
+                    <div class="chart-container split">
+                        <div class="chart-half">
+                            <h3>退货原因分布</h3>
+                            <canvas id="returns-reason-chart"></canvas>
+                        </div>
+                        <div class="chart-half">
+                            <h3>退货率趋势</h3>
+                            <canvas id="returns-trend-chart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="card-container">
+                        <div class="card">
+                            <div class="card-title">总退货率</div>
+                            <div class="card-value" id="total-return-rate">0%</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">本期退货金额</div>
+                            <div class="card-value" id="current-return-amount">¥0</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">平均处理时间</div>
+                            <div class="card-value" id="avg-return-process-time">0天</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">退货订单数</div>
+                            <div class="card-value" id="total-return-orders">0</div>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <h3>退货率最高的产品</h3>
+                        <table id="top-returned-products-table" class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>产品ID</th>
+                                    <th>产品名称</th>
+                                    <th>退货数量</th>
+                                    <th>销售数量</th>
+                                    <th>退货率</th>
+                                    <th>主要退货原因</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- 数据将动态加载 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- 库存周转分析 -->
+                <div id="inventory-turnover-report" class="report-content" style="display: none;">
+                    <div class="chart-container">
+                        <h3>库存周转率趋势</h3>
+                        <canvas id="inventory-turnover-chart"></canvas>
+                    </div>
+                    
+                    <div class="card-container">
+                        <div class="card">
+                            <div class="card-title">平均库存周转率</div>
+                            <div class="card-value" id="avg-inventory-turnover">0次</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">平均库存周转天数</div>
+                            <div class="card-value" id="avg-inventory-days">0天</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">最佳周转类别</div>
+                            <div class="card-value" id="best-turnover-category">无</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">最慢周转类别</div>
+                            <div class="card-value" id="worst-turnover-category">无</div>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <h3>各类别库存周转情况</h3>
+                        <table id="category-turnover-table" class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>类别</th>
+                                    <th>库存周转率</th>
+                                    <th>库存周转天数</th>
+                                    <th>平均库存金额</th>
+                                    <th>销售成本</th>
+                                    <th>趋势</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- 数据将动态加载 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- 客户留存分析 -->
+                <div id="customer-retention-report" class="report-content" style="display: none;">
+                    <div class="chart-container">
+                        <h3>客户留存率趋势</h3>
+                        <canvas id="customer-retention-chart"></canvas>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <h3>同期群用户留存热图</h3>
+                        <div id="retention-heatmap" class="heatmap-container"></div>
+                    </div>
+                    
+                    <div class="card-container">
+                        <div class="card">
+                            <div class="card-title">总体留存率</div>
+                            <div class="card-value" id="overall-retention-rate">0%</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">30天留存率</div>
+                            <div class="card-value" id="thirty-day-retention">0%</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">90天留存率</div>
+                            <div class="card-value" id="ninety-day-retention">0%</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">年度留存率</div>
+                            <div class="card-value" id="annual-retention">0%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <h3>客户流失原因分析</h3>
+                        <table id="churn-reasons-table" class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>流失原因</th>
+                                    <th>用户数</th>
+                                    <th>占比</th>
+                                    <th>平均消费金额</th>
+                                    <th>平均使用时长</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- 数据将动态加载 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- 销售漏斗分析 -->
+                <div id="sales-funnel-report" class="report-content" style="display: none;">
+                    <div class="chart-container split">
+                        <div class="chart-half">
+                            <h3>销售漏斗</h3>
+                            <canvas id="sales-funnel-chart"></canvas>
+                        </div>
+                        <div class="chart-half">
+                            <h3>转化率趋势</h3>
+                            <canvas id="conversion-trend-chart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="funnel-metrics">
+                        <div class="funnel-step">
+                            <div class="step-name">访问</div>
+                            <div class="step-value" id="visit-count">0</div>
+                            <div class="step-rate">100%</div>
+                        </div>
+                        <div class="funnel-arrow"><i class="bi bi-arrow-down"></i></div>
+                        <div class="funnel-step">
+                            <div class="step-name">浏览产品</div>
+                            <div class="step-value" id="product-view-count">0</div>
+                            <div class="step-rate" id="product-view-rate">0%</div>
+                        </div>
+                        <div class="funnel-arrow"><i class="bi bi-arrow-down"></i></div>
+                        <div class="funnel-step">
+                            <div class="step-name">加入购物车</div>
+                            <div class="step-value" id="add-to-cart-count">0</div>
+                            <div class="step-rate" id="add-to-cart-rate">0%</div>
+                        </div>
+                        <div class="funnel-arrow"><i class="bi bi-arrow-down"></i></div>
+                        <div class="funnel-step">
+                            <div class="step-name">创建订单</div>
+                            <div class="step-value" id="create-order-count">0</div>
+                            <div class="step-rate" id="create-order-rate">0%</div>
+                        </div>
+                        <div class="funnel-arrow"><i class="bi bi-arrow-down"></i></div>
+                        <div class="funnel-step">
+                            <div class="step-name">完成支付</div>
+                            <div class="step-value" id="payment-count">0</div>
+                            <div class="step-rate" id="payment-rate">0%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <h3>页面转化率详情</h3>
+                        <table id="page-conversion-table" class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>页面</th>
+                                    <th>访问量</th>
+                                    <th>跳出率</th>
+                                    <th>平均停留时间</th>
+                                    <th>转化次数</th>
+                                    <th>转化率</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- 数据将动态加载 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 产品性能分析选项卡内容 -->
+                <div class="tab-pane fade" id="product-performance-tab-pane" role="tabpanel" aria-labelledby="product-performance-tab" tabindex="0">
+            </div>
+        </main>
+    </div>
+    
+    <script src="scripts/main.js"></script>
+    <script src="scripts/reports.js"></script>
+</body>
+</html> 

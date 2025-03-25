@@ -1,0 +1,79 @@
+# Neon数据库项目
+
+这是一个使用Neon PostgreSQL数据库的简单Node.js项目，实现了完整的用户管理功能。
+
+## 项目结构
+
+- `index.js`: 主应用文件，包含API路由和服务器启动代码
+- `db.js`: 数据库连接配置
+- `.env.example`: 环境变量示例文件（需复制为.env并填入实际值）
+- `public/`: 前端界面文件
+  - `index.html`: 主页HTML
+  - `style.css`: 样式表
+  - `app.js`: 前端JavaScript逻辑
+
+## 功能特点
+
+- 使用Neon PostgreSQL作为数据库
+- 完整的用户管理CRUD操作
+- 现代化的前端界面
+- 数据验证和错误处理
+- 响应式设计
+
+## 如何使用
+
+### 前置条件
+
+1. 在[Neon官网](https://neon.tech/)创建一个账号
+2. 创建一个新的PostgreSQL数据库项目
+3. 获取连接字符串
+
+### 安装和设置
+
+1. 克隆此仓库
+2. 安装依赖
+```bash
+npm install
+```
+3. 复制环境变量示例文件并填入您的Neon数据库连接信息
+```bash
+cp .env.example .env
+```
+4. 编辑.env文件，填入从Neon控制台获取的实际DATABASE_URL值
+
+### 运行项目
+
+```bash
+npm start
+```
+
+或者开发模式（自动重启）：
+
+```bash
+npm run dev
+```
+
+启动后，访问 http://localhost:3001 使用Web界面管理用户。
+
+## API端点
+
+- `GET /api/users`: 获取所有用户
+- `GET /api/users/:id`: 获取单个用户
+- `POST /api/users`: 创建新用户（需要提供name和email）
+- `PUT /api/users/:id`: 更新用户信息
+- `DELETE /api/users/:id`: 删除用户
+
+## 开发进度
+
+- [x] 初始化项目
+- [x] 配置Neon数据库连接
+- [x] 创建基本用户API
+- [x] 添加前端界面
+- [x] 实现完整CRUD功能
+- [ ] 添加身份验证
+- [ ] 添加更多功能
+
+## 注意事项
+
+- 请确保不要将包含敏感信息的.env文件提交到代码仓库
+- 在生产环境中，请适当配置SSL选项以确保安全连接 

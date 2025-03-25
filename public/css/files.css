@@ -1,0 +1,320 @@
+/* 文件管理页面样式 */
+
+/* 上传区域样式 */
+.upload-section {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.upload-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.upload-form .form-group:last-child {
+    grid-column: span 2;
+}
+
+.upload-progress {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 4px;
+}
+
+.progress-bar {
+    height: 20px;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: #4CAF50;
+    width: 0;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    text-align: center;
+    font-size: 12px;
+    color: #555;
+}
+
+/* 文件列表区域样式 */
+.files-section {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.filter-tools {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.filter-tools .form-group {
+    margin-right: 15px;
+    margin-bottom: 10px;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+}
+
+.search-bar input {
+    margin-right: 10px;
+    width: 200px;
+}
+
+/* 文件列表表格定制样式 */
+.data-table th:nth-child(1), /* ID列 */
+.data-table td:nth-child(1) {
+    width: 50px;
+}
+
+.data-table th:nth-child(2), /* 文件名列 */
+.data-table td:nth-child(2) {
+    width: 25%;
+}
+
+.data-table th:nth-child(3), /* 大小列 */
+.data-table td:nth-child(3) {
+    width: 80px;
+}
+
+.data-table th:nth-child(4), /* 类型列 */
+.data-table td:nth-child(4) {
+    width: 100px;
+}
+
+.data-table th:nth-child(5), /* 分类列 */
+.data-table td:nth-child(5) {
+    width: 100px;
+}
+
+.data-table th:nth-child(6), /* 上传者列 */
+.data-table td:nth-child(6) {
+    width: 120px;
+}
+
+.data-table th:nth-child(7), /* 时间列 */
+.data-table td:nth-child(7) {
+    width: 160px;
+}
+
+.data-table th:nth-child(8), /* 操作列 */
+.data-table td:nth-child(8) {
+    width: 120px;
+}
+
+/* 文件类型标签样式 */
+.file-type-tag {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.file-type-image {
+    background-color: #e3f2fd;
+    color: #0d47a1;
+}
+
+.file-type-document {
+    background-color: #e8f5e9;
+    color: #1b5e20;
+}
+
+.file-type-spreadsheet {
+    background-color: #f1f8e9;
+    color: #33691e;
+}
+
+.file-type-archive {
+    background-color: #fff3e0;
+    color: #e65100;
+}
+
+.file-type-text {
+    background-color: #f3e5f5;
+    color: #4a148c;
+}
+
+.file-type-other {
+    background-color: #f5f5f5;
+    color: #424242;
+}
+
+/* 文件分类标签样式 */
+.file-category {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.file-category-product {
+    background-color: #ffecb3;
+    color: #ff6f00;
+}
+
+.file-category-order {
+    background-color: #bbdefb;
+    color: #0d47a1;
+}
+
+.file-category-user {
+    background-color: #c8e6c9;
+    color: #1b5e20;
+}
+
+.file-category-document {
+    background-color: #d1c4e9;
+    color: #4a148c;
+}
+
+.file-category-other {
+    background-color: #f5f5f5;
+    color: #616161;
+}
+
+/* 文件操作按钮 */
+.file-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.action-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.action-btn:hover {
+    background-color: #f0f0f0;
+}
+
+.action-btn.view {
+    color: #2196F3;
+}
+
+.action-btn.download {
+    color: #4CAF50;
+}
+
+.action-btn.delete {
+    color: #F44336;
+}
+
+/* 文件预览样式 */
+.file-preview {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    text-align: center;
+    min-height: 200px;
+}
+
+.file-preview img {
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+}
+
+.file-preview .pdf-container {
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+}
+
+.file-preview .pdf-container object,
+.file-preview .pdf-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.file-preview .text-preview {
+    text-align: left;
+    white-space: pre-wrap;
+    max-height: 400px;
+    overflow-y: auto;
+    font-family: monospace;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.file-preview .non-previewable {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+}
+
+.file-preview .file-icon {
+    font-size: 64px;
+    margin-bottom: 15px;
+    color: #555;
+}
+
+.file-details {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+}
+
+.file-details h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.file-details p {
+    margin: 8px 0;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .upload-form {
+        grid-template-columns: 1fr;
+    }
+    
+    .upload-form .form-group:last-child {
+        grid-column: span 1;
+    }
+    
+    .filter-tools {
+        flex-direction: column;
+    }
+    
+    .search-bar {
+        margin-top: 10px;
+        width: 100%;
+    }
+    
+    .search-bar input {
+        flex-grow: 1;
+    }
+} 

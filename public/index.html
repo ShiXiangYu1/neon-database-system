@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon数据库系统</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="container">
+                <div class="logo">
+                    <h1>Neon数据库系统</h1>
+                </div>
+                <nav class="nav">
+                    <ul class="nav-list">
+                        <li class="active"><a href="/">首页</a></li>
+                        <li><a href="/products.html">商品管理</a></li>
+                        <li><a href="/orders.html">订单管理</a></li>
+                        <li><a href="/users.html" id="usersLink">用户管理</a></li>
+                        <li><a href="/reports.html">报表统计</a></li>
+                        <li><a href="/files.html">文件管理</a></li>
+                    </ul>
+                </nav>
+                <div class="user-info">
+                    <div class="logged-in" style="display: none;">
+                        <span id="userName"></span>
+                        <button id="logoutBtn">登出</button>
+                    </div>
+                    <div class="logged-out">
+                        <a href="/login.html" class="login-btn">登录</a>
+                        <a href="/register.html" class="register-btn">注册</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <main class="main">
+            <div class="container">
+                <div class="dashboard">
+                    <h2>系统概览</h2>
+                    
+                    <div class="dashboard-cards">
+                        <div class="card" id="userCard">
+                            <div class="card-icon">👤</div>
+                            <div class="card-content">
+                                <h3>用户</h3>
+                                <p class="card-value" id="userCount">--</p>
+                            </div>
+                        </div>
+                        
+                        <div class="card" id="productCard">
+                            <div class="card-icon">📦</div>
+                            <div class="card-content">
+                                <h3>产品</h3>
+                                <p class="card-value" id="productCount">--</p>
+                            </div>
+                        </div>
+                        
+                        <div class="card" id="orderCard">
+                            <div class="card-icon">🛒</div>
+                            <div class="card-content">
+                                <h3>订单</h3>
+                                <p class="card-value" id="orderCount">--</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>最近订单</h3>
+                        <div class="recent-orders">
+                            <table id="recentOrdersTable">
+                                <thead>
+                                    <tr>
+                                        <th>订单号</th>
+                                        <th>客户</th>
+                                        <th>金额</th>
+                                        <th>状态</th>
+                                        <th>日期</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentOrdersBody">
+                                    <tr>
+                                        <td colspan="5" class="empty-message">加载中...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="footer">
+            <div class="container">
+                <p>&copy; 2023 Neon数据库系统. 保留所有权利.</p>
+            </div>
+        </footer>
+    </div>
+    
+    <div class="auth-overlay" id="authOverlay">
+        <div class="auth-message">
+            <h2>请先登录</h2>
+            <p>您需要登录才能访问系统功能</p>
+            <div class="auth-buttons">
+                <a href="/login.html" class="btn-primary">登录</a>
+                <a href="/register.html" class="btn-secondary">注册</a>
+            </div>
+        </div>
+    </div>
+    
+    <script src="scripts/main.js"></script>
+</body>
+</html> 

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>产品管理 - Neon数据库系统</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/products.css">
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="container">
+                <div class="logo">
+                    <h1>Neon数据库系统</h1>
+                </div>
+                <nav class="nav">
+                    <ul>
+                        <li><a href="/">首页</a></li>
+                        <li><a href="/products.html" class="active">商品管理</a></li>
+                        <li><a href="/orders.html">订单管理</a></li>
+                        <li><a href="/users.html" id="usersLink">用户管理</a></li>
+                        <li><a href="/reports.html">报表统计</a></li>
+                        <li><a href="/files.html">文件管理</a></li>
+                    </ul>
+                </nav>
+                <div class="user-info">
+                    <div class="logged-in" style="display: none;">
+                        <span id="userName"></span>
+                        <button id="logoutBtn">登出</button>
+                    </div>
+                    <div class="logged-out">
+                        <a href="/login.html" class="login-btn">登录</a>
+                        <a href="/register.html" class="register-btn">注册</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <main class="main">
+            <div class="container">
+                <div class="product-form" id="productFormContainer">
+                    <h2>添加/编辑产品</h2>
+                    <form id="productForm">
+                        <input type="hidden" id="productId" value="">
+                        
+                        <div class="form-group">
+                            <label for="name">产品名称</label>
+                            <input type="text" id="name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="description">产品描述</label>
+                            <textarea id="description" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="price">价格 (元)</label>
+                                <input type="number" id="price" min="0.01" step="0.01" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="stock">库存</label>
+                                <input type="number" id="stock" min="0" step="1" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="productImage">产品图片</label>
+                            <input type="file" id="productImage" accept="image/jpeg,image/png,image/jpg">
+                            <div id="imagePreviewContainer" style="display: none; margin-top: 10px;">
+                                <img id="imagePreview" style="max-width: 200px; max-height: 200px; border: 1px solid #ddd;">
+                                <button type="button" id="removeImageBtn" class="btn-danger">移除图片</button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-buttons">
+                            <button type="submit" id="saveBtn">保存</button>
+                            <button type="button" id="cancelBtn">取消</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="product-list">
+                    <h2>产品列表</h2>
+                    <div class="list-header">
+                        <div class="product-count">总共 <span id="productCount">0</span> 个产品</div>
+                        <div class="search-box">
+                            <input type="text" id="searchInput" placeholder="搜索产品...">
+                            <button id="searchBtn">搜索</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>名称</th>
+                                    <th>描述</th>
+                                    <th>图片</th>
+                                    <th>价格 (元)</th>
+                                    <th>库存</th>
+                                    <th>上次更新</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productTableBody">
+                                <tr>
+                                    <td colspan="7" class="empty-message">加载中...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="pagination" id="pagination">
+                        <!-- 分页控件将由JS动态生成 -->
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="footer">
+            <div class="container">
+                <p>&copy; 2023 Neon数据库系统. 保留所有权利.</p>
+            </div>
+        </footer>
+    </div>
+    
+    <div class="auth-overlay" id="authOverlay">
+        <div class="auth-message">
+            <h2>请先登录</h2>
+            <p>您需要登录才能访问产品管理功能</p>
+            <div class="auth-buttons">
+                <a href="/login.html" class="btn-primary">登录</a>
+                <a href="/register.html" class="btn-secondary">注册</a>
+            </div>
+        </div>
+    </div>
+    
+    <script src="scripts/main.js"></script>
+    <script src="scripts/products.js"></script>
+</body>
+</html> 

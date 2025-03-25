@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户管理 - Neon数据库系统</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/users.css">
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="container">
+                <div class="logo">
+                    <h1>Neon数据库系统</h1>
+                </div>
+                <nav class="nav">
+                    <ul>
+                        <li><a href="/">首页</a></li>
+                        <li><a href="/products.html">商品管理</a></li>
+                        <li><a href="/orders.html">订单管理</a></li>
+                        <li><a href="/users.html" class="active" id="usersLink">用户管理</a></li>
+                        <li><a href="/reports.html">报表统计</a></li>
+                        <li><a href="/files.html">文件管理</a></li>
+                    </ul>
+                </nav>
+                <div class="user-info">
+                    <div class="logged-in" style="display: none;">
+                        <span id="userName"></span>
+                        <button id="logoutBtn">登出</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <main class="main">
+            <div class="container">
+                <div class="user-form">
+                    <h2>添加/编辑用户</h2>
+                    <form id="userForm">
+                        <input type="hidden" id="userId" value="">
+                        
+                        <div class="form-group">
+                            <label for="name">姓名</label>
+                            <input type="text" id="name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">邮箱</label>
+                            <input type="email" id="email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="password">密码</label>
+                            <input type="password" id="password" placeholder="留空保持不变">
+                        </div>
+                        
+                        <div class="form-group" id="roleGroup">
+                            <label for="role">角色</label>
+                            <select id="role">
+                                <option value="user">普通用户</option>
+                                <option value="admin">管理员</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-buttons">
+                            <button type="submit" id="saveBtn">保存</button>
+                            <button type="button" id="cancelBtn">取消</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="user-list">
+                    <h2>用户列表</h2>
+                    <div class="list-header">
+                        <div class="user-count">总共 <span id="userCount">0</span> 个用户</div>
+                        <div class="search-box">
+                            <input type="text" id="searchInput" placeholder="搜索用户...">
+                            <button id="searchBtn">搜索</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>姓名</th>
+                                    <th>邮箱</th>
+                                    <th>角色</th>
+                                    <th>注册时间</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userTableBody">
+                                <tr>
+                                    <td colspan="6" class="empty-message">加载中...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="pagination" id="pagination">
+                        <!-- 分页控件将由JS动态生成 -->
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="footer">
+            <div class="container">
+                <p>&copy; 2023 Neon数据库系统. 保留所有权利.</p>
+            </div>
+        </footer>
+    </div>
+    
+    <div class="auth-overlay" id="authOverlay">
+        <div class="auth-message">
+            <h2>需要管理员权限</h2>
+            <p>您需要管理员权限才能访问用户管理功能</p>
+            <div class="auth-buttons">
+                <a href="/" class="btn-primary">返回首页</a>
+            </div>
+        </div>
+    </div>
+    
+    <script src="scripts/main.js"></script>
+    <script src="scripts/users.js"></script>
+</body>
+</html> 

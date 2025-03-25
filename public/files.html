@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件管理 - 管理系统</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/files.css">
+</head>
+<body>
+    <!-- 全局加载指示器 -->
+    <div id="loadingIndicator" class="loading-indicator">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- 认证遮罩层 -->
+    <div id="authOverlay" class="auth-overlay">
+        <div class="auth-container">
+            <h2>请登录</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">邮箱</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit">登录</button>
+                </div>
+                <div id="loginMessage" class="message"></div>
+            </form>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 侧边栏导航 -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2>管理系统</h2>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="index.html"><span class="icon">📊</span> 仪表盘</a></li>
+                <li><a href="products.html"><span class="icon">📦</span> 商品管理</a></li>
+                <li><a href="orders.html"><span class="icon">🛒</span> 订单管理</a></li>
+                <li><a href="users.html"><span class="icon">👥</span> 用户管理</a></li>
+                <li><a href="reports.html"><span class="icon">📈</span> 报表分析</a></li>
+                <li class="active"><a href="files.html"><span class="icon">📁</span> 文件管理</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <button id="logoutBtn">登出</button>
+            </div>
+        </nav>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1>文件管理</h1>
+                <div class="user-info">
+                    <span id="currentUser">未登录</span>
+                </div>
+            </div>
+
+            <!-- 文件上传区域 -->
+            <div class="upload-section">
+                <h2>上传文件</h2>
+                <form id="singleFileUploadForm" class="upload-form">
+                    <div class="form-group">
+                        <label for="file">选择文件</label>
+                        <input type="file" id="file" name="file" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fileCategory">文件分类</label>
+                        <select id="fileCategory" name="category">
+                            <option value="product">商品相关</option>
+                            <option value="order">订单相关</option>
+                            <option value="user">用户相关</option>
+                            <option value="document">文档</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="fileDescription">文件描述</label>
+                        <textarea id="fileDescription" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="relatedId">关联ID (可选)</label>
+                        <input type="number" id="relatedId" name="related_id" placeholder="产品ID、订单ID等">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">上传文件</button>
+                    </div>
+                </form>
+
+                <div class="upload-progress" style="display: none;">
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <div class="progress-text">0%</div>
+                </div>
+
+                <div id="uploadMessage" class="message"></div>
+            </div>
+
+            <!-- 文件列表区域 -->
+            <div class="files-section">
+                <h2>文件列表</h2>
+                
+                <div class="filter-tools">
+                    <div class="form-group">
+                        <label for="categoryFilter">按分类筛选</label>
+                        <select id="categoryFilter">
+                            <option value="">全部</option>
+                            <option value="product">商品相关</option>
+                            <option value="order">订单相关</option>
+                            <option value="user">用户相关</option>
+                            <option value="document">文档</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+                    
+                    <div class="search-bar">
+                        <input type="text" id="fileSearch" placeholder="搜索文件...">
+                        <button id="searchBtn">搜索</button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table" id="filesTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>文件名</th>
+                                <th>大小</th>
+                                <th>类型</th>
+                                <th>分类</th>
+                                <th>上传者</th>
+                                <th>上传时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- 文件列表将通过JavaScript动态生成 -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination" id="filesPagination">
+                    <!-- 分页按钮将通过JavaScript动态生成 -->
+                </div>
+            </div>
+
+            <!-- 文件预览模态框 -->
+            <div id="filePreviewModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 id="previewFileName">文件预览</h3>
+                        <span class="close">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <div id="filePreview" class="file-preview">
+                            <!-- 预览内容将根据文件类型动态生成 -->
+                        </div>
+                        <div class="file-details">
+                            <h4>文件信息</h4>
+                            <p><strong>ID:</strong> <span id="previewFileId"></span></p>
+                            <p><strong>原始文件名:</strong> <span id="previewOriginalName"></span></p>
+                            <p><strong>大小:</strong> <span id="previewFileSize"></span></p>
+                            <p><strong>类型:</strong> <span id="previewFileMime"></span></p>
+                            <p><strong>上传时间:</strong> <span id="previewFileDate"></span></p>
+                            <p><strong>描述:</strong> <span id="previewFileDesc"></span></p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a id="downloadFileBtn" class="btn-primary" href="#">下载文件</a>
+                        <button id="editFileBtn" class="btn-secondary">编辑信息</button>
+                        <button id="deleteFileBtn" class="btn-danger">删除文件</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 编辑文件信息模态框 -->
+            <div id="editFileModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>编辑文件信息</h3>
+                        <span class="close">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editFileForm">
+                            <input type="hidden" id="editFileId">
+                            <div class="form-group">
+                                <label for="editFileCategory">文件分类</label>
+                                <select id="editFileCategory" name="category">
+                                    <option value="product">商品相关</option>
+                                    <option value="order">订单相关</option>
+                                    <option value="user">用户相关</option>
+                                    <option value="document">文档</option>
+                                    <option value="other">其他</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="editFileDescription">文件描述</label>
+                                <textarea id="editFileDescription" name="description" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="editRelatedId">关联ID</label>
+                                <input type="number" id="editRelatedId" name="related_id">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="saveFileChangesBtn" class="btn-primary">保存更改</button>
+                        <button class="btn-secondary modal-close">取消</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="scripts/main.js"></script>
+    <script src="scripts/files.js"></script>
+</body>
+</html> 
