@@ -4,7 +4,7 @@ const db = require('../db');
 const path = require('path');
 const fs = require('fs');
 const { verifyToken, isAdmin } = require('../middleware/auth');
-const { uploadSingle, uploadMultiple } = require('../middleware/upload');
+const { uploadSingle, uploadMultiple, isVercel, getUploadDir } = require('../middleware/upload');
 const { v4: uuidv4 } = require('uuid');
 const multer = require('multer');
 
@@ -344,7 +344,7 @@ router.get('/:id', verifyToken, async (req, res) => {
  *       500:
  *         description: 服务器错误
  */
-router.post('/upload', verifyToken, upload.single('file'), async (req, res) => {
+router.post('/upload', verifyToken, uploadSingle, async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: '没有上传文件' });
@@ -352,11 +352,14 @@ router.post('/upload', verifyToken, upload.single('file'), async (req, res) => {
     
     const { category, description, related_id } = req.body;
     
+    // Vercel环境中返回适当的路径
+    let filePath = req.file.path;
+    
     // 保存文件信息到数据库
     const fileData = {
       originalName: req.file.originalname,
       filename: req.file.filename,
-      path: req.file.path,
+      path: filePath,
       size: req.file.size,
       mimetype: req.file.mimetype,
       userId: req.user.id,
@@ -381,21 +384,24 @@ router.post('/upload', verifyToken, upload.single('file'), async (req, res) => {
     console.error('文件上传失败:', err);
     // 出错时删除上传的文件
     if (req.file) {
-      fs.unlinkSync(req.file.path);
+      try {
+        fs.unlinkSync(req.file.path);
+      } catch (e) {
+        console.error('删除文件失败:', e);
+      }
     }
     res.status(500).json({ error: '服务器错误' });
   }
 });
 
 // 上传多个文件
-router.post('/upload-multiple', verifyToken, upload.array('files', 5), async (req, res) => {
+router.post('/upload-multiple', verifyToken, uploadMultiple, async (req, res) => {
   try {
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ error: '没有上传文件' });
     }
     
     const { category, description, related_id } = req.body;
-    const filesData = [];
     
     // 批量插入文件信息
     const queryValues = [];
@@ -452,7 +458,7 @@ router.post('/upload-multiple', verifyToken, upload.array('files', 5), async (re
 router.put('/:id', verifyToken, async (req, res) => {
   try {
     const { id } = req.params;
-    const { category, description } = req.body;
+    const { category, description, related_id } = req.body;
     
     // 检查文件是否存在以及用户权限
     const checkResult = await db.query('SELECT * FROM files WHERE id = $1', [id]);
@@ -471,10 +477,10 @@ router.put('/:id', verifyToken, async (req, res) => {
     // 更新文件信息
     const result = await db.query(`
       UPDATE files
-      SET category = $1, description = $2
-      WHERE id = $3
+      SET category = $1, description = $2, related_id = $3
+      WHERE id = $4
       RETURNING *
-    `, [category, description, id]);
+    `, [category, description, related_id, id]);
     
     res.json({
       message: '文件信息更新成功',
@@ -608,10 +614,8 @@ router.get('/:id/download', verifyToken, async (req, res) => {
       return res.status(403).json({ error: '没有权限下载此文件' });
     }
     
-    // 使用正确的文件路径 - 不添加../public前缀
-    const filePath = file.path;
-    
-    if (!fs.existsSync(filePath)) {
+    // 检查文件是否存在
+    if (!fs.existsSync(file.path)) {
       return res.status(404).json({ error: '文件不存在于服务器上' });
     }
     
@@ -619,8 +623,9 @@ router.get('/:id/download', verifyToken, async (req, res) => {
     res.setHeader('Content-Type', file.mimetype);
     res.setHeader('Content-Disposition', `attachment; filename=${encodeURIComponent(file.original_name)}`);
     
-    // 发送文件
-    res.sendFile(filePath);
+    // 创建可读流并发送文件
+    const fileStream = fs.createReadStream(file.path);
+    fileStream.pipe(res);
   } catch (err) {
     console.error('文件下载失败:', err);
     res.status(500).json({ error: '服务器错误' });

@@ -1,3 +1,19 @@
+// 获取API基础URL
+const getApiBaseUrl = () => {
+  // 默认使用相对路径（开发环境）
+  let baseUrl = '';
+  
+  // 在生产环境，使用当前域名（Vercel部署）
+  if (window.location.hostname !== 'localhost') {
+    baseUrl = window.location.origin;
+  }
+  
+  return `${baseUrl}/api`;
+};
+
+// API基础URL
+const API_BASE_URL = getApiBaseUrl();
+
 // DOM元素
 const authOverlay = document.getElementById('authOverlay');
 const userName = document.getElementById('userName');
@@ -26,7 +42,7 @@ if (logoutBtn) {
 // 检查登录状态
 async function checkAuthStatus() {
     try {
-        const response = await fetch('/api/auth/me');
+        const response = await fetch(`${API_BASE_URL}/auth/me`);
         
         if (response.ok) {
             const user = await response.json();
@@ -57,7 +73,7 @@ async function checkAuthStatus() {
 // 登出处理
 async function handleLogout() {
     try {
-        const response = await fetch('/api/auth/logout', {
+        const response = await fetch(`${API_BASE_URL}/auth/logout`, {
             method: 'POST'
         });
         
@@ -137,7 +153,7 @@ async function loadDashboardData() {
 // 获取用户数量
 async function fetchUserCount() {
     try {
-        const response = await fetch('/api/users?limit=1');
+        const response = await fetch(`${API_BASE_URL}/users?limit=1`);
         
         if (response.ok) {
             const data = await response.json();
@@ -152,7 +168,7 @@ async function fetchUserCount() {
 // 获取产品数量
 async function fetchProductCount() {
     try {
-        const response = await fetch('/api/products?limit=1');
+        const response = await fetch(`${API_BASE_URL}/products?limit=1`);
         
         if (response.ok) {
             const data = await response.json();
@@ -167,7 +183,7 @@ async function fetchProductCount() {
 // 获取订单数量
 async function fetchOrderCount() {
     try {
-        const response = await fetch('/api/orders?limit=1');
+        const response = await fetch(`${API_BASE_URL}/orders?limit=1`);
         
         if (response.ok) {
             const data = await response.json();
@@ -182,7 +198,7 @@ async function fetchOrderCount() {
 // 获取最近订单
 async function fetchRecentOrders() {
     try {
-        const response = await fetch('/api/orders?limit=5');
+        const response = await fetch(`${API_BASE_URL}/orders?limit=5`);
         
         if (response.ok) {
             const data = await response.json();

@@ -1,3 +1,19 @@
+// 获取API基础URL
+const getApiBaseUrl = () => {
+  // 默认使用相对路径（开发环境）
+  let baseUrl = '';
+  
+  // 在生产环境，使用当前域名（Vercel部署）
+  if (window.location.hostname !== 'localhost') {
+    baseUrl = window.location.origin;
+  }
+  
+  return `${baseUrl}/api`;
+};
+
+// API基础URL
+const API_BASE_URL = getApiBaseUrl();
+
 // 获取当前页面类型
 const isLoginPage = window.location.pathname.includes('login');
 const isRegisterPage = window.location.pathname.includes('register');
@@ -5,7 +21,7 @@ const isRegisterPage = window.location.pathname.includes('register');
 // 检查用户是否已登录
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const response = await fetch('/api/auth/me');
+        const response = await fetch(`${API_BASE_URL}/auth/me`);
         
         if (response.ok) {
             // 用户已登录，重定向到主页
@@ -36,7 +52,8 @@ if (isLoginPage) {
         }
         
         try {
-            const response = await fetch('/api/auth/login', {
+            console.log(`正在发送登录请求至: ${API_BASE_URL}/auth/login`);
+            const response = await fetch(`${API_BASE_URL}/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -92,7 +109,8 @@ if (isRegisterPage) {
         }
         
         try {
-            const response = await fetch('/api/auth/register', {
+            console.log(`正在发送注册请求至: ${API_BASE_URL}/auth/register`);
+            const response = await fetch(`${API_BASE_URL}/auth/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

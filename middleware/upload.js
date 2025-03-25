@@ -3,16 +3,32 @@ const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
 
-// 确保上传目录存在
-const uploadDir = path.join(__dirname, '../public/uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
+// 检查是否在Vercel环境中
+const isVercel = process.env.VERCEL === '1';
+
+// 配置上传目录
+const getUploadDir = () => {
+  // 在Vercel环境中使用/tmp目录
+  if (isVercel) {
+    const tmpDir = '/tmp/uploads';
+    if (!fs.existsSync(tmpDir)) {
+      fs.mkdirSync(tmpDir, { recursive: true });
+    }
+    return tmpDir;
+  } else {
+    // 本地开发环境使用项目目录中的上传文件夹
+    const uploadDir = path.join(__dirname, '../public/uploads');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    return uploadDir;
+  }
+};
 
 // 配置存储
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, uploadDir);
+    cb(null, getUploadDir());
   },
   filename: (req, file, cb) => {
     // 生成唯一文件名
@@ -54,5 +70,7 @@ const upload = multer({
 module.exports = {
   upload,
   uploadSingle: upload.single('file'),
-  uploadMultiple: upload.array('files', 5) // 最多上传5个文件
+  uploadMultiple: upload.array('files', 5), // 最多上传5个文件
+  isVercel,
+  getUploadDir
 }; 

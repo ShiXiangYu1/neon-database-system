@@ -20,6 +20,24 @@ const PORT = process.env.PORT || 3000;
 // 中间件
 app.use(express.json());
 app.use(cookieParser());
+
+// 添加CORS中间件
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  
+  // 所有API路由响应添加JSON内容类型
+  if (req.path.startsWith('/api/')) {
+    res.setHeader('Content-Type', 'application/json');
+  }
+  
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  next();
+});
+
 app.use(express.static('public')); // 添加静态文件中间件
 
 // 添加Swagger UI中间件
@@ -146,9 +164,34 @@ app.use((req, res) => {
   res.status(404).json({ error: '未找到请求的资源' });
 });
 
+// 初始化数据库 - Vercel环境中按需初始化
+let dbInitialized = false;
+
+// 数据库初始化中间件，适用于Vercel环境
+app.use(async (req, res, next) => {
+  // 仅在Vercel环境下并且数据库未初始化时执行
+  if (process.env.VERCEL === '1' && !dbInitialized) {
+    try {
+      await initializeDb();
+      dbInitialized = true;
+      console.log('数据库初始化成功 (Vercel环境)');
+    } catch (err) {
+      console.error('数据库初始化失败 (Vercel环境):', err);
+      // 继续处理请求，不阻止
+    }
+  }
+  next();
+});
+
 // 启动服务器
-app.listen(PORT, async () => {
-  console.log(`服务器运行在 http://localhost:${PORT}`);
-  // 初始化数据库
-  await initializeDb();
-}); 
+if (process.env.VERCEL !== '1') {
+  // 仅在非Vercel环境启动HTTP服务器
+  app.listen(PORT, async () => {
+    console.log(`服务器运行在 http://localhost:${PORT}`);
+    // 初始化数据库
+    await initializeDb();
+  });
+}
+
+// 为Vercel无服务器环境导出应用
+module.exports = app; 
