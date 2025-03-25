@@ -4,12 +4,44 @@
     {
       "src": "index.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "public/**",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/(.*)",
+      "src": "/api/(.*)",
       "dest": "/index.js"
+    },
+    {
+      "src": "/(login|register|products|orders|users|reports|files)\\.html",
+      "dest": "/public/$1.html"
+    },
+    {
+      "src": "/styles/(.*)",
+      "dest": "/public/styles/$1"
+    },
+    {
+      "src": "/scripts/(.*)",
+      "dest": "/public/scripts/$1"
+    },
+    {
+      "src": "/images/(.*)",
+      "dest": "/public/images/$1"
+    },
+    {
+      "src": "/uploads/(.*)",
+      "dest": "/public/uploads/$1"
+    },
+    {
+      "src": "/",
+      "dest": "/public/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/public/$1"
     }
   ],
   "env": {

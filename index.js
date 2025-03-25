@@ -1,6 +1,7 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const db = require('./db');
+const path = require('path');
 require('dotenv').config();
 
 // 导入Swagger配置
@@ -23,9 +24,12 @@ app.use(cookieParser());
 
 // 添加CORS中间件
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
+  // 设置允许的域名，根据环境判断
+  const allowedOrigin = req.headers.origin || '*';
+  res.header('Access-Control-Allow-Origin', allowedOrigin);
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Credentials', 'true');
   
   // 所有API路由响应添加JSON内容类型
   if (req.path.startsWith('/api/')) {
@@ -38,7 +42,15 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.static('public')); // 添加静态文件中间件
+// 静态文件服务，优化Vercel环境
+if (process.env.VERCEL === '1') {
+  // Vercel环境，静态文件由vercel.json配置处理
+  console.log('在Vercel环境中运行，静态文件由vercel.json处理');
+} else {
+  // 本地开发环境使用express静态文件中间件
+  app.use(express.static(path.join(__dirname, 'public')));
+  console.log('在本地环境中运行，使用Express静态文件服务');
+}
 
 // 添加Swagger UI中间件
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, { explorer: true }));
